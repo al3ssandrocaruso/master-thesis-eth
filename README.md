@@ -1,0 +1,122 @@
+# Deep Representation Learning for Sub-typing and Identification of Mental Health Symptoms via Multimodal Wearable Data
+
+## Overview
+This repository contains the code used for my master thesis, titled "Deep Representation Learning for Sub-typing and Identification of Mental Health Symptoms via Multimodal Wearable Data". 
+## Setup
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/al3ssandrocaruso/master-thesis.git
+    cd master-thesis
+    ```
+
+2. **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+3. **Dataset Configuration**:
+Ensure the dataset is placed in the correct directory as specified in the config.py file. You can update the config.py file with the relevant dataset paths.
+## Scripts Description
+
+### 1. Short-Term Clustering
+This script performs clustering on short-term data segments using different clustering algorithms.
+
+**Usage:**
+```bash
+python features_clustering.py --algorithm_choice [1|2|3] --n_clusters [int] --scaler [MinMax|Standard] --pca_components [int] --modality [physiological|social]
+```
+#### Arguments
+- `--algorithm_choice`: Choice of clustering algorithm (1 for KMeans, 2 for Birch, 3 for GaussianMixture).
+- `--n_clusters`: Number of clusters.
+- `--scaler`: Choice of scaler (MinMax or Standard).
+- `--pca_components`: Number of PCA components to keep.
+- `--modality`: Clustering modality (physiological or social).
+
+### 2. Multi-View Short-Term Clustering
+This script performs clustering on multimodal data views and visualizes the clusters using PCA.
+
+**Usage:**
+```bash
+python mv_clustering.py --n_clusters [int] --scaler [MinMax|Standard] --pca_components_view_1 [int] --pca_components_view_2 [int]
+```
+#### Arguments
+- `--n_clusters`: Number of clusters.
+- `--scaler`: Choice of scaler (MinMax or Standard).
+- `--pca_components_view_1`: Number of PCA components to keep for view 1.
+- `--pca_components_view_2`: Number of PCA components to keep for view 2.
+
+
+### 3. Generate Autoencoder-Based Embeddings
+This script trains various autoencoder models on multimodal wearable data to extract embeddings.
+
+**Usage:**
+```bash
+python train_embeddings.py --interval_length [int] --overlap [int] --hidden_dim [int] --embedding_dim [int] --num_epochs [int] --scaler [MinMax|Standard] --num_hidden_layers [int] --num_attention_heads [int] --intermediate_size [int] --optimizer [adam|sgd] --lr [float]
+```
+#### Arguments
+- `--interval_length`: Choice of window length.
+- `--overlap`: Choice of overlap for time windows.
+- `--hidden_dim`: Hidden dimension (default: 128).
+- `--embedding_dim`: Embedding dimension (default: 64).
+- `--num_epochs`: Number of training epochs (default: 100).
+- `--scaler`: Choice of scaler (MinMax or Standard).
+- `--num_hidden_layers`: Number of hidden layers (default: 1).
+- `--num_attention_heads`: Number of attention heads (default: 1).
+- `--intermediate_size`: Intermediate size for feed-forward layers (default: 128).
+- `--optimizer`: Optimizer to use (default: adam).
+- `--lr`: Learning rate (default: 1e-3).
+
+### 4. Generate Autoencoder-Based Embeddings with Multimodal Fusion
+Trains various multimodal autoencoder models (early, mid, late fusion) to generate multimodal embeddings from the data.
+
+**Usage:**
+```bash
+python train_embeddings.py --interval_length [int] --overlap [int] --hidden_dim [int] --embedding_dim [int] --num_epochs [int] --scaler [MinMax|Standard] --num_hidden_layers [int] --num_attention_heads [int] --intermediate_size [int] --optimizer [adam|sgd] --lr [float] [--use_simple_decoder] [--use_dropout] [--dropout_rate [float]] [--add_noise] [--noise_factor [float]]
+```
+
+### Arguments
+- `--interval_length`: Length of each time window for processing (default: 8).
+- `--overlap`: Overlap between consecutive time windows (default: 4).
+- `--hidden_dim`: Dimension of hidden layers (default: 512).
+- `--embedding_dim`: Dimension of embeddings (default: 256).
+- `--num_epochs`: Number of training epochs (default: 100).
+- `--scaler`: Scaler for data normalization, options are `MinMax` or `Standard` (default: Standard).
+- `--num_hidden_layers`: Number of hidden layers in the model (default: 1).
+- `--num_attention_heads`: Number of attention heads (applicable for Transformer and BERT, default: 1).
+- `--intermediate_size`: Size of feed-forward layers (applicable for Transformer and BERT, default: 512).
+- `--optimizer`: Optimizer for training, options are `adam` or `sgd` (default: adam).
+- `--lr`: Learning rate for the optimizer (default: 0.001).
+- `--use_simple_decoder`: Use a simple decoder architecture (default: False).
+- `--use_dropout`: Apply dropout to the model (default: False).
+- `--dropout_rate`: Dropout rate (default: 0.5).
+- `--add_noise`: Add noise to the input data during training (default: False).
+- `--noise_factor`: Intensity of noise added to the data (default: 0.3).
+
+### 5. Cluster Generated Autoencoder Embeddings
+This script clusters the embeddings generated by the autoencoder models.
+
+**Usage:**
+```bash
+python cluster_embeddings.py --algorithm_choice [1|2|3] --n_clusters [int]
+```
+#### Arguments
+- `--algorithm_choice`: Choice of clustering algorithm (1 for KMeans, 2 for Birch, 3 for GaussianMixture).
+- `--n_clusters`: Number of clusters.
+
+### 6. Semi-Supervised Approach
+This script implements a semi-supervised approach using constrained KMeans clustering with informative constraints.
+
+**Usage:**
+```bash
+python semi_supervised_clustering.py --max_constraints [int]
+```
+#### Arguments
+- `--max_constraints`: Maximum number of constraints to
+### 7.  Cross-Validation
+This script implements cross-validation on trained embeddings for symptom identification.
+
+**Usage:**
+```bash
+python train_model.py --user_cross_validation [True/False]
+```
+#### Arguments
+- `--user_cross_validation`: Set to `True` for user-based cross-validation or `False` for sample-based cross-validation.
